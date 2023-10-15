@@ -26,4 +26,13 @@ public class User {
         this.name = name;
         this.age = age;
     }
+
+    public User(UserDTO user) {
+        this.name = user.name;
+        this.age = user.age;
+    }
+
+    public UserDTO toDTO() {
+        return new UserDTO(id, name, age);
+    }
 }
