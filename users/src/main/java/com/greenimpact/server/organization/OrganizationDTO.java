@@ -1,4 +1,4 @@
-package com.greenimpact.server.user;
+package com.greenimpact.server.organization;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,12 +8,10 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class UserDTO {
+public class OrganizationDTO {
     public Long id;
 
     public String name;
-
-    public int age;
 
     public List<Pair<String, String>> roles;
 }

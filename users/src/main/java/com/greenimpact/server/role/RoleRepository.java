@@ -1,8 +1,8 @@
-package com.greenimpact.server.user;
+package com.greenimpact.server.role;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity, Long> {
+public interface RoleRepository extends JpaRepository<RoleEntity, Long> {
 }
