@@ -9,10 +9,11 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>users</artifactId>
+    <artifactId>products</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
 
-    <name>users</name>
-    <description>users</description>
+    <name>products</name>
+    <description>products</description>
 
     <properties>
         <java.version>17</java.version>
