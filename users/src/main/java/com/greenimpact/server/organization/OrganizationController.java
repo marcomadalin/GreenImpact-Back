@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -42,6 +43,14 @@ public class OrganizationController {
         return ResponseEntity.ok().body(organizationService.createOrganization(organization));
     }
 
+    @PostMapping("/{organizationId}/addUser")
+    public ResponseEntity<OrganizationDTO> addUser(@PathVariable Long organizationId, @RequestParam Long userId, @RequestParam String role) {
+        OrganizationDTO result = organizationService.addUser(organizationId, userId, role);
+
+        if (result == null) return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.ok().body(result);
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<OrganizationDTO> updateOrganization(@PathVariable Long id, @RequestBody OrganizationDTO organization) {
         OrganizationDTO result = organizationService.updateOrganization(id, organization);
@@ -56,5 +65,13 @@ public class OrganizationController {
         organizationService.deleteOrganization(id);
         return ResponseEntity.ok()
                 .body("Organization deleted");
+    }
+
+    @DeleteMapping("/{organizationId}/removeUser")
+    public ResponseEntity<OrganizationDTO> removeUser(@PathVariable Long organizationId, @RequestParam Long userId) {
+        OrganizationDTO result = organizationService.removeUser(organizationId, userId);
+
+        if (result == null) return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.ok().body(result);
     }
 }

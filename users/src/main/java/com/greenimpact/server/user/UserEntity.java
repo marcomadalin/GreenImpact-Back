@@ -31,7 +31,7 @@ public class UserEntity {
 
     private int age;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<RoleEntity> roles;
 
     public UserEntity(String name, int age) {

@@ -4,4 +4,5 @@ public enum RoleEnum {
     USER,
     EDITOR,
     ADMINISTRATOR,
+    SUPER
 }

@@ -29,7 +29,7 @@ public class OrganizationEntity {
 
     private String name;
 
-    @OneToMany(mappedBy = "organization", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "organization", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<RoleEntity> roles;
 
     public OrganizationEntity(String name) {

@@ -40,4 +40,6 @@ public class RoleEntity {
         this.organization = organization;
         this.role = role;
     }
+
+
 }
