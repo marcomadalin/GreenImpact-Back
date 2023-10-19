@@ -1,8 +1,8 @@
 server:
-  port: 8000
+  port: 9000
 spring:
   application:
-    name: EurekaServer
+    name: Eureka
 eureka:
   client:
     registerWithEureka: false
