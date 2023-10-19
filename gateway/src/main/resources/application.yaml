@@ -2,7 +2,13 @@ server:
   port: 8000
 spring:
   application:
-    name: Gateway
+    name: APIGateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
 eureka:
   client:
     serviceUrl:
