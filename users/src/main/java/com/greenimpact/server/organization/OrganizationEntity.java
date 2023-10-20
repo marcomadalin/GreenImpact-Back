@@ -38,7 +38,7 @@ public class OrganizationEntity {
     }
 
     public OrganizationEntity(OrganizationDTO organization) {
-        this.name = organization.name;
+        this.name = organization.getName();
         this.roles = new ArrayList<>();
     }
 

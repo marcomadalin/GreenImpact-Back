@@ -19,10 +19,10 @@ public class ApplicationConfiguration {
     @Bean
     CommandLineRunner commandLineRunner(UserRepository userRepository, RoleRepository roleRepository, OrganizationRepository organizationRepository) {
         return args -> {
-            UserEntity marco = new UserEntity("Marco", 23);
+            UserEntity marco = new UserEntity("marcomadalin", "123", "Marco", 23);
             marco = userRepository.save(marco);
 
-            UserEntity karina = new UserEntity("Karina", 23);
+            UserEntity karina = new UserEntity("karinad", "123", "Karina", 23);
             karina = userRepository.save(karina);
 
             OrganizationEntity greenImpact = new OrganizationEntity("GreenImpact");

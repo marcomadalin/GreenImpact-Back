@@ -37,8 +37,10 @@ public class UserService {
         if (userOpt.isPresent()) {
             UserEntity act = userOpt.get();
 
-            act.setName(user.name);
-            act.setAge(user.age);
+            user.setUsername(act.getUsername());
+            user.setPassword(act.getPassword());
+            act.setName(user.getName());
+            act.setAge(user.getAge());
             return userRepository.save(act).toDTO();
         }
 

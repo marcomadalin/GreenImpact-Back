@@ -9,11 +9,15 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class UserDTO {
-    public Long id;
+    private Long id;
 
-    public String name;
+    private String username;
 
-    public int age;
+    private String password;
 
-    public List<Pair<String, String>> roles;
+    private String name;
+
+    private int age;
+
+    private List<Pair<String, String>> roles;
 }

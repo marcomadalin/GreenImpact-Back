@@ -62,7 +62,7 @@ public class OrganizationService {
         if (userOpt.isPresent()) {
             OrganizationEntity act = userOpt.get();
 
-            act.setName(organization.name);
+            act.setName(organization.getName());
             return organizationRepository.save(act).toDTO();
         }
 

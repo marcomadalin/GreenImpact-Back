@@ -13,6 +13,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -38,19 +40,19 @@ public class ProductEntity {
     public ProductEntity(String name) {
         this.name = name;
         this.parent = null;
-        this.children = null;
+        this.children = new HashSet<>(List.of());
     }
 
     public ProductEntity(ProductDTO productDTO) {
         this.name = productDTO.getName();
         this.parent = null;
-        this.children = null;
+        this.children = new HashSet<>(List.of());
     }
 
     public ProductEntity(String name, ProductEntity parent, Set<ProductEntity> children) {
         this.name = name;
         this.parent = parent;
-        this.children = children;
+        this.children = new HashSet<>(List.of());
     }
 
     ProductDTO toDTO() {

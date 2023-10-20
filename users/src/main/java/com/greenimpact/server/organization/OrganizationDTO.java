@@ -9,9 +9,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class OrganizationDTO {
-    public Long id;
+    private Long id;
 
-    public String name;
+    private String name;
 
-    public List<Pair<String, String>> roles;
+    private List<Pair<String, String>> roles;
 }

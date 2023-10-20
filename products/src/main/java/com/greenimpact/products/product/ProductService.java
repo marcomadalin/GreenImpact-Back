@@ -3,7 +3,9 @@ package com.greenimpact.products.product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -33,18 +35,42 @@ public class ProductService {
 
     public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
         Optional<ProductEntity> productOpt = productRepository.findById(id);
+        if (productOpt.isEmpty()) return null;
 
-        if (productOpt.isPresent()) {
-            ProductEntity act = productOpt.get();
+        ProductEntity act = productOpt.get();
+        act.setName(productDTO.getName());
 
-            act.setName(productDTO.getName());
-            return productRepository.save(act).toDTO();
-        }
+        Optional<ProductEntity> parentOpt;
+        if (productDTO.getParent() != null) {
+            parentOpt = productRepository.findById(productDTO.getParent().getId());
+            if (parentOpt.isEmpty()) return null;
+            act.setParent(productOpt.get());
+        } else act.setParent(null);
 
-        return null;
+
+        act.getChildren().forEach(child -> {
+            if (Objects.equals(child.getParent().getId(), act.getId())) {
+                child.setParent(null);
+                productRepository.save(child);
+            }
+        });
+
+        if (productDTO.getChildren() != null) {
+            act.getChildren().forEach(child -> {
+                Optional<ProductEntity> childOpt = productRepository.findById(child.getId());
+                if (childOpt.isPresent()) {
+                    ProductEntity childProduct = childOpt.get();
+                    childProduct.setParent(act);
+                    productRepository.save(childProduct);
+                }
+            });
+        } else act.setChildren(new HashSet<>(List.of()));
+
+        return productRepository.save(act).toDTO();
     }
 
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
     }
+
 }
