@@ -1,5 +1,6 @@
-package com.example.security;
+package com.greenimpact.server.model;
 
+import com.netflix.discovery.shared.Pair;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,8 @@ public class UserDetails implements org.springframework.security.core.userdetail
     private String organization;
 
     private String role;
+
+    private List<Pair<String, String>> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

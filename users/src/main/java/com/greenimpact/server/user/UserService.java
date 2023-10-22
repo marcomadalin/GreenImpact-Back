@@ -27,6 +27,12 @@ public class UserService {
         return userOpt.map(UserEntity::toDTO).orElse(null);
     }
 
+    public UserDTO getUser(String username) {
+        Optional<UserEntity> userOpt = userRepository.findByUsername(username);
+
+        return userOpt.map(UserEntity::toDTO).orElse(null);
+    }
+
     public UserDTO createUser(UserDTO user) {
         return userRepository.save(new UserEntity(user)).toDTO();
     }
