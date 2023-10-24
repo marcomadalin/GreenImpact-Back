@@ -2,6 +2,7 @@ package com.greenimpact.server.role;
 
 import com.greenimpact.server.organization.OrganizationEntity;
 import com.greenimpact.server.user.UserEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -32,6 +33,7 @@ public class RoleEntity {
     @JoinColumn(name = "organizationId")
     OrganizationEntity organization;
 
+    @Column(nullable = false)
     RoleEnum role;
 
     public RoleEntity(UserEntity user, OrganizationEntity organization, RoleEnum role) {

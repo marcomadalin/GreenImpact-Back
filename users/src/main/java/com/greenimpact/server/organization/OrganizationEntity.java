@@ -2,6 +2,7 @@ package com.greenimpact.server.organization;
 
 import com.greenimpact.server.role.RoleEntity;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -11,7 +12,6 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +27,7 @@ public class OrganizationEntity {
     @GeneratedValue
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "organization", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
@@ -44,6 +45,10 @@ public class OrganizationEntity {
 
     public OrganizationDTO toDTO() {
         return new OrganizationDTO(id, name, roles.stream().map(role ->
-                Pair.of(role.getUser().getName(), role.getRole().toString())).collect(Collectors.toList()));
+                new UserRoleDTO(role.getUser().toSimplifiedDTO(), role.getRole().toString())).collect(Collectors.toList()));
+    }
+
+    public OrganizationDTO toSimplifiedDTO() {
+        return new OrganizationDTO(id, name, null);
     }
 }

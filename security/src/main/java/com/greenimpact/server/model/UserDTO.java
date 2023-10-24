@@ -1,10 +1,7 @@
 package com.greenimpact.server.model;
 
-import com.netflix.discovery.shared.Pair;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -19,5 +16,7 @@ public class UserDTO {
 
     private int age;
 
-    private List<Pair<String, String>> roles;
+    private OrganizationDTO loggedOrganization;
+
+    private String role;
 }

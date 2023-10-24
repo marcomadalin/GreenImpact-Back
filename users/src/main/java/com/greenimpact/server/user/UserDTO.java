@@ -1,10 +1,8 @@
 package com.greenimpact.server.user;
 
+import com.greenimpact.server.organization.OrganizationDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.data.util.Pair;
-
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -19,5 +17,7 @@ public class UserDTO {
 
     private int age;
 
-    private List<Pair<String, String>> roles;
+    private OrganizationDTO loggedOrganization;
+
+    private String role;
 }

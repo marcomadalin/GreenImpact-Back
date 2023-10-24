@@ -1,5 +1,6 @@
 package com.greenimpact.server.user;
 
+import com.greenimpact.server.organization.OrganizationEntity;
 import com.greenimpact.server.role.RoleEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -7,16 +8,16 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,11 +32,18 @@ public class UserEntity {
     @Column(unique = true)
     private String username;
 
+    @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private int age;
+
+    @JoinColumn(name = "lastLoggedOrgId", nullable = false)
+    @OneToOne
+    private OrganizationEntity loggedOrganization;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<RoleEntity> roles;
@@ -45,6 +53,7 @@ public class UserEntity {
         this.password = password;
         this.name = name;
         this.age = age;
+        this.loggedOrganization = null;
         this.roles = new ArrayList<>();
     }
 
@@ -53,12 +62,21 @@ public class UserEntity {
         this.password = user.getPassword();
         this.name = user.getName();
         this.age = user.getAge();
+        this.loggedOrganization = null;
         this.roles = new ArrayList<>();
+    }
+
+    public String getOrganizationRole(Long organizationId) {
+        return roles.stream().filter(role -> role.getOrganization().getId().equals(organizationId)).findFirst().get().getRole().toString();
     }
 
 
     public UserDTO toDTO() {
-        return new UserDTO(id, username, password, name, age, roles.stream().map(role ->
-                Pair.of(role.getOrganization().getName(), role.getRole().toString())).collect(Collectors.toList()));
+        return new UserDTO(id, username, password, name, age, loggedOrganization.toSimplifiedDTO(),
+                roles.stream().filter(role -> role.getOrganization().getId().equals(loggedOrganization.getId())).findFirst().get().getRole().toString());
+    }
+
+    public UserDTO toSimplifiedDTO() {
+        return new UserDTO(id, username, password, name, age, null, null);
     }
 }

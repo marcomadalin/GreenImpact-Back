@@ -1,5 +1,6 @@
 package com.greenimpact.products.product;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -28,6 +29,7 @@ public class ProductEntity {
     @GeneratedValue
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     @ManyToOne

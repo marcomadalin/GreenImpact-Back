@@ -1,4 +1,4 @@
-package com.greenimpact.server.organization;
+package com.greenimpact.server.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

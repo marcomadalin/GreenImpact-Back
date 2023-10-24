@@ -1,5 +1,8 @@
 package com.greenimpact.server.user;
 
+import com.greenimpact.server.organization.OrganizationEntity;
+import com.greenimpact.server.organization.OrganizationRepository;
+import com.greenimpact.server.organization.OrganizationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,9 +15,15 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private final OrganizationRepository organizationRepository;
+
+    private final OrganizationService organizationService;
+
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, OrganizationService organizationService, OrganizationRepository organizationRepository) {
         this.userRepository = userRepository;
+        this.organizationService = organizationService;
+        this.organizationRepository = organizationRepository;
     }
 
     public List<UserDTO> getAllUsers() {
@@ -23,18 +32,24 @@ public class UserService {
 
     public UserDTO getUser(Long id) {
         Optional<UserEntity> userOpt = userRepository.findById(id);
-
         return userOpt.map(UserEntity::toDTO).orElse(null);
     }
 
     public UserDTO getUser(String username) {
         Optional<UserEntity> userOpt = userRepository.findByUsername(username);
-
         return userOpt.map(UserEntity::toDTO).orElse(null);
     }
 
-    public UserDTO createUser(UserDTO user) {
-        return userRepository.save(new UserEntity(user)).toDTO();
+    public UserDTO createUser(UserDTO userDTO) {
+        Optional<OrganizationEntity> organizationOpt = organizationRepository.findById(userDTO.getLoggedOrganization().getId());
+        if (organizationOpt.isPresent()) {
+            UserEntity user = new UserEntity(userDTO);
+            user.setLoggedOrganization(organizationOpt.get());
+            user = userRepository.save(user);
+            organizationService.addUser(organizationOpt.get().getId(), user.getId(), userDTO.getRole());
+            return userRepository.findById(user.getId()).get().toDTO();
+        }
+        return null;
     }
 
     public UserDTO updateUser(Long id, UserDTO user) {
@@ -54,7 +69,6 @@ public class UserService {
     }
 
     public void deleteUser(Long id) {
-
         userRepository.deleteById(id);
     }
 }

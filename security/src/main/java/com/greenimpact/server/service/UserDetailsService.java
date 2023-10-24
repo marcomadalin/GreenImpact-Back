@@ -16,8 +16,8 @@ public class UserDetailsService implements org.springframework.security.core.use
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDTO response = restTemplate.getForObject("http://localhost:8000/user/users/{username}", UserDTO.class, username);
-        System.out.println(response);
-        return new com.greenimpact.server.model.UserDetails(response.getUsername(), response.getPassword(), null, null, response.getRoles());
+        UserDTO response = restTemplate.getForObject("http://localhost:8000/user/users/getByUsername/{username}", UserDTO.class, username);
+        return new com.greenimpact.server.model.UserDetails(response.getId(), response.getUsername(), response.getPassword(),
+                response.getName(), response.getAge(), response.getLoggedOrganization(), response.getRole());
     }
 }
