@@ -73,7 +73,11 @@ public class UserEntity {
 
     public UserDTO toDTO() {
         return new UserDTO(id, username, password, name, age, loggedOrganization.toSimplifiedDTO(),
-                roles.stream().filter(role -> role.getOrganization().getId().equals(loggedOrganization.getId())).findFirst().get().getRole().toString());
+                roles.stream()
+                        .filter(role -> role.getOrganization().getId().equals(loggedOrganization.getId()))
+                        .findFirst()
+                        .map(foundRole -> foundRole.getRole().toString())
+                        .orElse(""));
     }
 
     public UserDTO toSimplifiedDTO() {

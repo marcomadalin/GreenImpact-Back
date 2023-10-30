@@ -47,7 +47,9 @@ public class UserService {
             user.setLoggedOrganization(organizationOpt.get());
             user = userRepository.save(user);
             organizationService.addUser(organizationOpt.get().getId(), user.getId(), userDTO.getRole());
-            return userRepository.findById(user.getId()).get().toDTO();
+            UserDTO result = userRepository.findById(user.getId()).get().toDTO();
+            result.setRole(userDTO.getRole());
+            return result;
         }
         return null;
     }

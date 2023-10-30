@@ -3,9 +3,11 @@ package com.greenimpact.server.user;
 import com.greenimpact.server.organization.OrganizationDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class UserDTO {
     private Long id;
 
