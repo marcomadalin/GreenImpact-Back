@@ -47,6 +47,6 @@ public class AuthenticationController {
     @GetMapping("/validate")
     public ResponseEntity<Boolean> validateToken(@RequestParam String token) {
         String username = jwtService.extractUsername(token);
-        return ResponseEntity.ok(jwtService.isTokenValid(jwtService.extractUsername(token), userDetailsService.loadUserByUsername(username)));
+        return ResponseEntity.ok(jwtService.isTokenValid(token, userDetailsService.loadUserByUsername(username)));
     }
 }
