@@ -5,13 +5,17 @@ import com.greenimpact.server.model.UserDTO;
 import com.greenimpact.server.service.AuthenticationService;
 import com.greenimpact.server.service.JwtService;
 import com.greenimpact.server.service.UserDetailsService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/authentication")
@@ -48,5 +52,13 @@ public class AuthenticationController {
     public ResponseEntity<Boolean> validateToken(@RequestParam String token) {
         String username = jwtService.extractUsername(token);
         return ResponseEntity.ok(jwtService.isTokenValid(token, userDetailsService.loadUserByUsername(username)));
+    }
+
+    @GetMapping("/whoami")
+    public ResponseEntity<UserDTO> whoami(@RequestHeader HttpHeaders headers) {
+        UserDTO result = userDetailsService.getUser(jwtService.extractUsername(Objects.requireNonNull(headers.get("authorization")).get(0).substring(7)));
+
+        if (result == null) return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.ok().body(result);
     }
 }

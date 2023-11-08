@@ -20,4 +20,8 @@ public class UserDetailsService implements org.springframework.security.core.use
         return new com.greenimpact.server.model.UserDetails(response.getId(), response.getUsername(), response.getPassword(),
                 response.getName(), response.getAge(), response.getLoggedOrganization(), response.getRole());
     }
+
+    public UserDTO getUser(String username) {
+        return restTemplate.getForObject("http://localhost:8000/user/users/getByUsername/{username}", UserDTO.class, username);
+    }
 }
