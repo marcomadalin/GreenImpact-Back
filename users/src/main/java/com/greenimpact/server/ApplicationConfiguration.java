@@ -10,6 +10,7 @@ import com.greenimpact.server.user.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 
@@ -25,11 +26,11 @@ public class ApplicationConfiguration {
             OrganizationEntity greenPeace = new OrganizationEntity("GreenPeace");
             greenPeace = organizationRepository.save(greenPeace);
 
-            UserEntity marco = new UserEntity("marcomadalin", "123", "Marco", 23);
+            UserEntity marco = new UserEntity("marcomadalin", new BCryptPasswordEncoder().encode("123"), "Marco", 23);
             marco.setLoggedOrganization(greenImpact);
             marco = userRepository.save(marco);
 
-            UserEntity karina = new UserEntity("karinad", "123", "Karina", 23);
+            UserEntity karina = new UserEntity("karinad", new BCryptPasswordEncoder().encode("123"), "Karina", 23);
             karina.setLoggedOrganization(greenPeace);
             karina = userRepository.save(karina);
 

@@ -1,5 +1,6 @@
 package com.greenimpact.server.user;
 
+import com.greenimpact.server.organization.OrganizationDTO;
 import com.greenimpact.server.organization.OrganizationEntity;
 import com.greenimpact.server.organization.OrganizationRepository;
 import com.greenimpact.server.organization.OrganizationService;
@@ -24,6 +25,14 @@ public class UserService {
         this.userRepository = userRepository;
         this.organizationService = organizationService;
         this.organizationRepository = organizationRepository;
+    }
+
+    public List<OrganizationDTO> getAllUserOrganizations(Long id) throws Exception {
+        Optional<UserEntity> userOpt = userRepository.findById(id);
+
+        if (userOpt.isPresent()) return userOpt.get().getRoles().stream()
+                .map(roleEntity -> roleEntity.getOrganization().toSimplifiedDTO()).toList();
+        else throw new Exception("USER DOES NOT EXIST");
     }
 
     public List<UserDTO> getAllUsers() {
