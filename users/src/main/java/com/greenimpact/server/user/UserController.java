@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -49,14 +48,6 @@ public class UserController {
     @GetMapping("/getByUsername/{username}")
     public ResponseEntity<UserDTO> getUser(@PathVariable String username) {
         UserDTO result = userService.getUser(username);
-
-        if (result == null) return ResponseEntity.badRequest().body(null);
-        return ResponseEntity.ok().body(result);
-    }
-
-    @PostMapping("/new")
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user) {
-        UserDTO result = userService.createUser(user);
 
         if (result == null) return ResponseEntity.badRequest().body(null);
         return ResponseEntity.ok().body(result);

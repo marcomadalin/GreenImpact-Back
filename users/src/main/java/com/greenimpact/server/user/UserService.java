@@ -4,7 +4,9 @@ import com.greenimpact.server.organization.OrganizationDTO;
 import com.greenimpact.server.organization.OrganizationEntity;
 import com.greenimpact.server.organization.OrganizationRepository;
 import com.greenimpact.server.organization.OrganizationService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
 
@@ -20,11 +22,15 @@ public class UserService {
 
     private final OrganizationService organizationService;
 
-    @Autowired
     public UserService(UserRepository userRepository, OrganizationService organizationService, OrganizationRepository organizationRepository) {
         this.userRepository = userRepository;
         this.organizationService = organizationService;
         this.organizationRepository = organizationRepository;
+    }
+
+    @Override
+    public UserEntity loadUserByUsername(String username) throws UsernameNotFoundException {
+        return userRepository.findByUsername(username).get();
     }
 
     public List<OrganizationDTO> getAllUserOrganizations(Long id) throws Exception {
@@ -54,6 +60,7 @@ public class UserService {
         if (organizationOpt.isPresent()) {
             UserEntity user = new UserEntity(userDTO);
             user.setLoggedOrganization(organizationOpt.get());
+            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
             user = userRepository.save(user);
             organizationService.addUser(organizationOpt.get().getId(), user.getId(), userDTO.getRole());
             UserDTO result = userRepository.findById(user.getId()).get().toDTO();

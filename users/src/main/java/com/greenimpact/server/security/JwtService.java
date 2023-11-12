@@ -1,6 +1,6 @@
-package com.greenimpact.server.service;
+package com.greenimpact.server.security;
 
-import com.greenimpact.server.model.UserDetails;
+import com.greenimpact.server.user.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -28,13 +28,13 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserEntity userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
 
     public String generateToken(
             Map<String, Object> extraClaims,
-            UserDetails userDetails) {
+            UserEntity userDetails) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
@@ -45,7 +45,7 @@ public class JwtService {
                 .compact();
     }
 
-    public boolean isTokenValid(String token, UserDetails userDetails) {
+    public boolean isTokenValid(String token, UserEntity userDetails) {
         try {
             final String username = extractUsername(token);
             return userDetails.getUsername().equals(username) && !isTokenExpired(token);

@@ -1,5 +1,6 @@
-package com.greenimpact.server.model;
+package com.greenimpact.server.role;
 
+import com.greenimpact.server.user.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
