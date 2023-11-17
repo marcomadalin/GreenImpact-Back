@@ -111,4 +111,22 @@ public class UserEntity implements UserDetails {
     public UserDTO toSimplifiedDTO() {
         return new UserDTO(id, username, password, name, age, null, null);
     }
+
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", age=" + age + '\'' +
+                ", loggedOrganization=" + loggedOrganization.toSimplifiedDTO().toString() + '\'' +
+                ", role=" + roles.stream()
+                .filter(role -> role.getOrganization().getId().equals(loggedOrganization.getId()))
+                .findFirst()
+                .map(foundRole -> foundRole.getRole().toString())
+                .orElse("") + '\'' +
+                '}';
+    }
 }

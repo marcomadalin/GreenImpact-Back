@@ -1,17 +1,22 @@
 package com.greenimpact.server.user;
 
 import com.greenimpact.server.organization.OrganizationDTO;
+import com.greenimpact.server.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/users")
@@ -19,9 +24,12 @@ public class UserController {
 
     private final UserService userService;
 
+    private final JwtService jwtService;
+
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JwtService jwtService) {
         this.userService = userService;
+        this.jwtService = jwtService;
     }
 
     @GetMapping("/all")
@@ -51,6 +59,14 @@ public class UserController {
 
         if (result == null) return ResponseEntity.badRequest().body(null);
         return ResponseEntity.ok().body(result);
+    }
+
+    @PutMapping("/changeOrganization")
+    public ResponseEntity<String> changeOrganization(@RequestHeader HttpHeaders headers, @RequestParam Long organizationId) throws Exception {
+        String token = Objects.requireNonNull(headers.get("authorization")).get(0).substring(7);
+        String username = jwtService.extractUsername(token);
+
+        return ResponseEntity.ok().body(userService.changeOrganization(organizationId, username));
     }
 
     @PutMapping("/{id}")

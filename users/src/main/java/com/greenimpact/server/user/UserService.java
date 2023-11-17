@@ -4,6 +4,7 @@ import com.greenimpact.server.organization.OrganizationDTO;
 import com.greenimpact.server.organization.OrganizationEntity;
 import com.greenimpact.server.organization.OrganizationRepository;
 import com.greenimpact.server.organization.OrganizationService;
+import com.greenimpact.server.security.JwtService;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -22,10 +23,13 @@ public class UserService implements UserDetailsService {
 
     private final OrganizationService organizationService;
 
-    public UserService(UserRepository userRepository, OrganizationService organizationService, OrganizationRepository organizationRepository) {
+    private final JwtService jwtService;
+
+    public UserService(UserRepository userRepository, OrganizationService organizationService, OrganizationRepository organizationRepository, JwtService jwtService) {
         this.userRepository = userRepository;
         this.organizationService = organizationService;
         this.organizationRepository = organizationRepository;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -70,6 +74,17 @@ public class UserService implements UserDetailsService {
         return null;
     }
 
+    public String changeOrganization(Long organizationId, String username) throws Exception {
+        Optional<OrganizationEntity> organizationOpt = organizationRepository.findById(organizationId);
+        if (organizationOpt.isEmpty()) throw new Exception("ORGANIZATION DOES NOT EXIST");
+
+        Optional<UserEntity> userOpt = userRepository.findByUsername(username);
+        UserEntity user = userOpt.get();
+        user.setLoggedOrganization(organizationOpt.get());
+        userRepository.save(user);
+        return jwtService.generateToken(user);
+    }
+
     public UserDTO updateUser(Long id, UserDTO user) {
         Optional<UserEntity> userOpt = userRepository.findById(id);
 
@@ -77,7 +92,7 @@ public class UserService implements UserDetailsService {
             UserEntity act = userOpt.get();
 
             user.setUsername(act.getUsername());
-            user.setPassword(act.getPassword());
+            user.setPassword(new BCryptPasswordEncoder().encode(act.getPassword()));
             act.setName(user.getName());
             act.setAge(user.getAge());
             return userRepository.save(act).toDTO();

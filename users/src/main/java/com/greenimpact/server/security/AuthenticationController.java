@@ -60,14 +60,4 @@ public class AuthenticationController {
         return ResponseEntity.ok().body(result);
     }
 
-    @PostMapping("/changeOrganization")
-    public ResponseEntity<String> login(@RequestHeader HttpHeaders headers, @RequestParam Long organizationId) throws Exception {
-        String token = Objects.requireNonNull(headers.get("authorization")).get(0).substring(7);
-        String username = jwtService.extractUsername(token);
-
-        if (!jwtService.isTokenValid(token, userService.loadUserByUsername(username)))
-            throw new Exception("TOKEN NOT VALID");
-
-        return ResponseEntity.ok().body(authenticationService.changeOrganization(organizationId, username, token));
-    }
 }

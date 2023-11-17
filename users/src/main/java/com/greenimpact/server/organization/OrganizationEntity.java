@@ -51,4 +51,14 @@ public class OrganizationEntity {
     public OrganizationDTO toSimplifiedDTO() {
         return new OrganizationDTO(id, name, null);
     }
+
+    @Override
+    public String toString() {
+        return "OrganizationEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", roles=" + roles.stream().map(role ->
+                new UserRoleDTO(role.getUser().toSimplifiedDTO(), role.getRole().toString())).toList() + '\'' +
+                '}';
+    }
 }
