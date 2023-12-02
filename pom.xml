@@ -21,6 +21,7 @@
     <modules>
         <module>users</module>
         <module>products</module>
+        <module>plans</module>
         <module>eureka</module>
         <module>gateway</module>
     </modules>

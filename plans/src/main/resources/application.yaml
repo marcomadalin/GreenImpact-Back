@@ -1,0 +1,25 @@
+server:
+  port: 8070
+spring:
+  application:
+    name: PLANS
+  datasource:
+    url: jdbc:postgresql://localhost:5432/greenimpact
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9000/eureka
+  instance:
+    preferIpAddress: true
