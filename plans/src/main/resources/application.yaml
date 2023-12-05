@@ -2,7 +2,7 @@ server:
   port: 8070
 spring:
   application:
-    name: PLANS
+    name: PLAN
   datasource:
     url: jdbc:postgresql://localhost:5432/greenimpact
     username: postgres
