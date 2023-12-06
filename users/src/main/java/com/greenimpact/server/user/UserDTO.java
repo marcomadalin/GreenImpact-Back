@@ -17,6 +17,8 @@ public class UserDTO {
 
     private String name;
 
+    private String surname;
+
     private int age;
 
     private OrganizationDTO loggedOrganization;

@@ -43,6 +43,9 @@ public class UserEntity implements UserDetails {
     private String name;
 
     @Column(nullable = false)
+    private String surname;
+
+    @Column(nullable = false)
     private int age;
 
     @JoinColumn(name = "lastLoggedOrgId", nullable = false)
@@ -52,10 +55,11 @@ public class UserEntity implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<RoleEntity> roles;
 
-    public UserEntity(String username, String password, String name, int age) {
+    public UserEntity(String username, String password, String name, String surname, int age) {
         this.username = username;
         this.password = password;
         this.name = name;
+        this.surname = surname;
         this.age = age;
         this.loggedOrganization = null;
         this.roles = new ArrayList<>();
@@ -65,6 +69,7 @@ public class UserEntity implements UserDetails {
         this.username = user.getUsername();
         this.password = user.getPassword();
         this.name = user.getName();
+        this.surname = user.getSurname();
         this.age = user.getAge();
         this.loggedOrganization = null;
         this.roles = new ArrayList<>();
@@ -100,7 +105,7 @@ public class UserEntity implements UserDetails {
     }
 
     public UserDTO toDTO() {
-        return new UserDTO(id, username, password, name, age, loggedOrganization.toSimplifiedDTO(),
+        return new UserDTO(id, username, password, name, surname, age, loggedOrganization.toSimplifiedDTO(),
                 roles.stream()
                         .filter(role -> role.getOrganization().getId().equals(loggedOrganization.getId()))
                         .findFirst()
@@ -109,7 +114,7 @@ public class UserEntity implements UserDetails {
     }
 
     public UserDTO toSimplifiedDTO() {
-        return new UserDTO(id, username, password, name, age, null, null);
+        return new UserDTO(id, username, password, name, surname, age, null, null);
     }
 
 
@@ -120,6 +125,7 @@ public class UserEntity implements UserDetails {
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
                 ", age=" + age + '\'' +
                 ", loggedOrganization=" + loggedOrganization.toSimplifiedDTO().toString() + '\'' +
                 ", role=" + roles.stream()

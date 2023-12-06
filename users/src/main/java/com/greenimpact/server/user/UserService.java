@@ -90,10 +90,10 @@ public class UserService implements UserDetailsService {
 
         if (userOpt.isPresent()) {
             UserEntity act = userOpt.get();
-
             user.setUsername(act.getUsername());
             user.setPassword(new BCryptPasswordEncoder().encode(act.getPassword()));
             act.setName(user.getName());
+            act.setSurname(user.getSurname());
             act.setAge(user.getAge());
             return userRepository.save(act).toDTO();
         }

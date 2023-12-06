@@ -7,6 +7,7 @@ import com.greenimpact.server.role.RoleEnum;
 import com.greenimpact.server.role.RoleRepository;
 import com.greenimpact.server.user.UserEntity;
 import com.greenimpact.server.user.UserRepository;
+import com.greenimpact.server.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +16,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ApplicationConfiguration {
 
-    private final UserDetailsService userDetailsService;
+    private final UserService userDetailsService;
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -46,7 +46,8 @@ public class ApplicationConfiguration {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(UserRepository userRepository, RoleRepository roleRepository, OrganizationRepository organizationRepository) {
+    CommandLineRunner commandLineRunner(UserRepository userRepository, RoleRepository roleRepository,
+                                        OrganizationRepository organizationRepository) {
         return args -> {
             OrganizationEntity greenImpact = new OrganizationEntity("GreenImpact");
             greenImpact = organizationRepository.save(greenImpact);
@@ -54,11 +55,11 @@ public class ApplicationConfiguration {
             OrganizationEntity greenPeace = new OrganizationEntity("GreenPeace");
             greenPeace = organizationRepository.save(greenPeace);
 
-            UserEntity marco = new UserEntity("marcomadalin", new BCryptPasswordEncoder().encode("123"), "Marco", 23);
+            UserEntity marco = new UserEntity("madalin@gmail.com", new BCryptPasswordEncoder().encode("123"), "Marco", "Madalin", 23);
             marco.setLoggedOrganization(greenImpact);
             marco = userRepository.save(marco);
 
-            UserEntity karina = new UserEntity("karinad", new BCryptPasswordEncoder().encode("123"), "Karina", 23);
+            UserEntity karina = new UserEntity("karina@gmail.com", new BCryptPasswordEncoder().encode("123"), "Karina", "Decsei", 23);
             karina.setLoggedOrganization(greenPeace);
             karina = userRepository.save(karina);
 
