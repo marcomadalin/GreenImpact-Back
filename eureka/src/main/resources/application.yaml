@@ -4,6 +4,8 @@ spring:
   application:
     name: EUREKA
 eureka:
+  instance:
+    hostname: localhost
   client:
     registerWithEureka: false
     fetchRegistry: false
