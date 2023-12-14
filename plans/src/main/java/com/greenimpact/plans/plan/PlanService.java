@@ -20,8 +20,8 @@ public class PlanService {
         this.planRepository = planRepository;
     }
 
-    public List<PlanDTO> getAllPlans() {
-        return planRepository.findAll().stream().map(PlanEntity::toDTO).collect(Collectors.toList());
+    public List<PlanDTO> getAllPlans(Long organizationId) {
+        return planRepository.findAllByOrOrganizationId(organizationId).stream().map(PlanEntity::toDTO).collect(Collectors.toList());
     }
 
     public PlanDTO getPlan(Long id) throws Exception {

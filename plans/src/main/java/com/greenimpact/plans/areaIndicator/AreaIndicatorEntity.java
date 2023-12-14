@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,10 +43,14 @@ public class AreaIndicatorEntity {
     public AreaIndicatorEntity(Long indicatorId, AreaEntity area) {
         this.indicatorId = indicatorId;
         this.area = area;
+        this.goals = Collections.emptyList();
+        this.samples = Collections.emptyList();
     }
 
     public AreaIndicatorEntity(AreaIndicatorDTO areaIndicatorDTO) {
         this.indicatorId = areaIndicatorDTO.getIndicatorId();
+        this.goals = Collections.emptyList();
+        this.samples = Collections.emptyList();
     }
 
     public AreaIndicatorDTO toDTO() {

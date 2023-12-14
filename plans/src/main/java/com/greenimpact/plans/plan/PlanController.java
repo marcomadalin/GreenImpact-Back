@@ -1,14 +1,8 @@
 package com.greenimpact.plans.plan;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -22,9 +16,9 @@ public class PlanController {
         this.planService = planService;
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<PlanDTO>> getPlans() {
-        return ResponseEntity.ok().body(planService.getAllPlans());
+    @GetMapping("/{organizationId}/all")
+    public ResponseEntity<List<PlanDTO>> getPlans(@PathVariable Long organizationId) {
+        return ResponseEntity.ok().body(planService.getAllPlans(organizationId));
     }
 
     @GetMapping("/{id}")

@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,6 +52,7 @@ public class AreaEntity {
         this.startDate = startDate;
         this.endDate = endDate;
         this.plan = plan;
+        this.indicators = Collections.emptyList();
     }
 
     public AreaEntity(AreaDTO areaDTO) {
@@ -58,6 +60,7 @@ public class AreaEntity {
         this.description = areaDTO.getDescription();
         this.startDate = areaDTO.getStartDate();
         this.endDate = areaDTO.getEndDate();
+        this.indicators = Collections.emptyList();
     }
 
     public AreaDTO toDTO() {

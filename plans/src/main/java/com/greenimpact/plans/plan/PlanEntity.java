@@ -12,6 +12,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,6 +52,7 @@ public class PlanEntity {
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.areas = Collections.emptyList();
     }
 
     public PlanEntity(PlanDTO planDTO) {
@@ -58,6 +61,7 @@ public class PlanEntity {
         this.description = planDTO.getDescription();
         this.startDate = planDTO.getStartDate();
         this.endDate = planDTO.getEndDate();
+        this.areas = Collections.emptyList();
     }
 
     public PlanDTO toDTO() {
