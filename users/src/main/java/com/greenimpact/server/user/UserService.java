@@ -85,7 +85,7 @@ public class UserService implements UserDetailsService {
         return jwtService.generateToken(user);
     }
 
-    public UserDTO updateUser(Long id, UserDTO user) {
+    public UserDTO updateUser(Long id, UserDTO user) throws Exception {
         Optional<UserEntity> userOpt = userRepository.findById(id);
 
         if (userOpt.isPresent()) {
@@ -94,14 +94,37 @@ public class UserService implements UserDetailsService {
             user.setPassword(new BCryptPasswordEncoder().encode(act.getPassword()));
             act.setName(user.getName());
             act.setSurname(user.getSurname());
-            act.setAge(user.getAge());
+            act.setPhoneNumber(user.getPhoneNumber());
             return userRepository.save(act).toDTO();
         }
+        else throw new Exception("USER DOES NOT EXIST");
+    }
 
-        return null;
+    public UserDTO updateLocale(Long id, String locale) throws Exception {
+        Optional<UserEntity> userOpt = userRepository.findById(id);
+
+        if (userOpt.isPresent()) {
+            UserEntity act = userOpt.get();
+            act.setLocale(locale);
+            return userRepository.save(act).toDTO();
+        }
+        else throw new Exception("USER DOES NOT EXIST");
+    }
+
+    public UserDTO changePassword(Long id, String oldPassword, String newPassword) throws Exception {
+        Optional<UserEntity> userOpt = userRepository.findById(id);
+
+        if (userOpt.isPresent()) {
+            UserEntity act = userOpt.get();
+            if (!new BCryptPasswordEncoder().matches(oldPassword, act.getPassword())) throw new Exception("INCORRECT PASSWORD");
+            act.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+            return userRepository.save(act).toDTO();
+        }
+        else throw new Exception("USER DOES NOT EXIST");
     }
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
+
 }

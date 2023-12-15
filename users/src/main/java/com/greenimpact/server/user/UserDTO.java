@@ -19,7 +19,9 @@ public class UserDTO {
 
     private String surname;
 
-    private int age;
+    private String locale;
+
+    private String phoneNumber;
 
     private OrganizationDTO loggedOrganization;
 

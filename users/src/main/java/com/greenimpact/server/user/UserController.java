@@ -70,9 +70,24 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO user) {
+    public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO user) throws Exception {
         UserDTO result = userService.updateUser(id, user);
 
+        if (result == null) return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @PutMapping("/changeLocale/{id}")
+    public ResponseEntity<UserDTO> updateLocale(@PathVariable Long id, @RequestParam String locale) throws Exception {
+        UserDTO result = userService.updateLocale(id, locale);
+        if (result == null) return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @PutMapping("/updatePassword/{id}")
+    public ResponseEntity<UserDTO> updatePassword(@PathVariable Long id, @RequestParam String oldPassword,
+                                                  @RequestParam String newPassword) throws Exception {
+        UserDTO result = userService.changePassword(id, oldPassword, newPassword);
         if (result == null) return ResponseEntity.badRequest().body(null);
         return ResponseEntity.ok().body(result);
     }

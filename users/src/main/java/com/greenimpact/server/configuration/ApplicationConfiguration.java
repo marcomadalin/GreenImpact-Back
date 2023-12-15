@@ -55,11 +55,11 @@ public class ApplicationConfiguration {
             OrganizationEntity greenPeace = new OrganizationEntity("GreenPeace");
             greenPeace = organizationRepository.save(greenPeace);
 
-            UserEntity marco = new UserEntity("madalin@gmail.com", new BCryptPasswordEncoder().encode("123"), "Marco", "Madalin", 23);
+            UserEntity marco = new UserEntity("madalin@gmail.com", new BCryptPasswordEncoder().encode("123"), "Marco", "Madalin", "ca", "12345678");
             marco.setLoggedOrganization(greenImpact);
             marco = userRepository.save(marco);
 
-            UserEntity karina = new UserEntity("karina@gmail.com", new BCryptPasswordEncoder().encode("123"), "Karina", "Decsei", 23);
+            UserEntity karina = new UserEntity("karina@gmail.com", new BCryptPasswordEncoder().encode("123"), "Karina", "Decsei", "es", "12345678");
             karina.setLoggedOrganization(greenPeace);
             karina = userRepository.save(karina);
 

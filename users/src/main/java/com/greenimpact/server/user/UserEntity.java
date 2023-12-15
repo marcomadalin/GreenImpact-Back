@@ -46,7 +46,10 @@ public class UserEntity implements UserDetails {
     private String surname;
 
     @Column(nullable = false)
-    private int age;
+    private String locale;
+
+    @Column(nullable = false)
+    private String phoneNumber;
 
     @JoinColumn(name = "lastLoggedOrgId", nullable = false)
     @ManyToOne
@@ -55,12 +58,13 @@ public class UserEntity implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<RoleEntity> roles;
 
-    public UserEntity(String username, String password, String name, String surname, int age) {
+    public UserEntity(String username, String password, String name, String surname, String locale, String phoneNumber) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.surname = surname;
-        this.age = age;
+        this.locale = locale;
+        this.phoneNumber = phoneNumber;
         this.loggedOrganization = null;
         this.roles = new ArrayList<>();
     }
@@ -70,7 +74,8 @@ public class UserEntity implements UserDetails {
         this.password = user.getPassword();
         this.name = user.getName();
         this.surname = user.getSurname();
-        this.age = user.getAge();
+        this.locale = user.getLocale();
+        this.phoneNumber = user.getPhoneNumber();
         this.loggedOrganization = null;
         this.roles = new ArrayList<>();
     }
@@ -105,7 +110,7 @@ public class UserEntity implements UserDetails {
     }
 
     public UserDTO toDTO() {
-        return new UserDTO(id, username, password, name, surname, age, loggedOrganization.toSimplifiedDTO(),
+        return new UserDTO(id, username, password, name, surname, locale, phoneNumber, loggedOrganization.toSimplifiedDTO(),
                 roles.stream()
                         .filter(role -> role.getOrganization().getId().equals(loggedOrganization.getId()))
                         .findFirst()
@@ -114,7 +119,7 @@ public class UserEntity implements UserDetails {
     }
 
     public UserDTO toSimplifiedDTO() {
-        return new UserDTO(id, username, password, name, surname, age, null, null);
+        return new UserDTO(id, username, password, name, surname,  locale, phoneNumber, null, null);
     }
 
 
@@ -126,7 +131,8 @@ public class UserEntity implements UserDetails {
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
-                ", age=" + age + '\'' +
+                ", locale=" + locale + '\'' +
+                ", phoneNumber=" + phoneNumber + '\'' +
                 ", loggedOrganization=" + loggedOrganization.toSimplifiedDTO().toString() + '\'' +
                 ", role=" + roles.stream()
                 .filter(role -> role.getOrganization().getId().equals(loggedOrganization.getId()))
