@@ -1,4 +1,4 @@
-package com.greenimpact.products;
+package com.greenimpact.products.configuration;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

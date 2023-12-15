@@ -14,6 +14,8 @@ public class ProductDTO {
 
     private String name;
 
+    private Boolean enabled;
+
     private ProductDTO parent;
 
     private List<ProductDTO> children;
