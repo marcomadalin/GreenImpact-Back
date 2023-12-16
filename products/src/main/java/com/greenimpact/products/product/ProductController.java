@@ -47,6 +47,6 @@ public class ProductController {
 
         productService.deleteProduct(id);
         return ResponseEntity.ok()
-                .body("User deleted");
+                .body("Product deleted");
     }
 }

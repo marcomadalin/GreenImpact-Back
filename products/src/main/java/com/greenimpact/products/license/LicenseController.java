@@ -29,7 +29,7 @@ public class LicenseController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<LicenseDTO> createLicense(@RequestBody LicenseDTO licenseDTO) {
+    public ResponseEntity<LicenseDTO> createLicense(@RequestBody LicenseDTO licenseDTO) throws Exception {
         return ResponseEntity.ok().body(licenseService.createLicense(licenseDTO));
     }
 
@@ -46,6 +46,6 @@ public class LicenseController {
 
         licenseService.deleteLicense(id);
         return ResponseEntity.ok()
-                .body("User deleted");
+                .body("License deleted");
     }
 }

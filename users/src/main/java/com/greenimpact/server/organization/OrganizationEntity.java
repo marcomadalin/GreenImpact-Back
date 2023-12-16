@@ -1,14 +1,7 @@
 package com.greenimpact.server.organization;
 
 import com.greenimpact.server.role.RoleEntity;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,35 +20,48 @@ public class OrganizationEntity {
     @GeneratedValue
     private Long id;
 
+    @Column
+    private Boolean enabled;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private OrganizationType type;
+
     @Column(nullable = false)
     private String name;
 
     @OneToMany(mappedBy = "organization", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<RoleEntity> roles;
 
-    public OrganizationEntity(String name) {
+    public OrganizationEntity(Boolean enabled, OrganizationType type, String name) {
+        this.enabled = enabled;
+        this.type = type;
         this.name = name;
         this.roles = new ArrayList<>();
     }
 
     public OrganizationEntity(OrganizationDTO organization) {
+        this.enabled = organization.getEnabled();
+        this.type = OrganizationType.valueOf(organization.getType());
         this.name = organization.getName();
         this.roles = new ArrayList<>();
     }
 
     public OrganizationDTO toDTO() {
-        return new OrganizationDTO(id, name, roles.stream().map(role ->
+        return new OrganizationDTO(id, enabled, type.toString(), name, roles.stream().map(role ->
                 new UserRoleDTO(role.getUser().toSimplifiedDTO(), role.getRole().toString())).collect(Collectors.toList()));
     }
 
     public OrganizationDTO toSimplifiedDTO() {
-        return new OrganizationDTO(id, name, null);
+        return new OrganizationDTO(id, enabled, type.toString(), name, null);
     }
 
     @Override
     public String toString() {
         return "OrganizationEntity{" +
                 "id=" + id +
+                ", enabled='" + enabled + '\'' +
+                ", type='" + type + '\'' +
                 ", name='" + name + '\'' +
                 ", roles=" + roles.stream().map(role ->
                 new UserRoleDTO(role.getUser().toSimplifiedDTO(), role.getRole().toString())).toList() + '\'' +

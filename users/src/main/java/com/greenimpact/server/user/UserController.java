@@ -5,15 +5,7 @@ import com.greenimpact.server.security.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -46,7 +38,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) {
+    public ResponseEntity<UserDTO> getUser(@PathVariable Long id) throws Exception {
         UserDTO result = userService.getUser(id);
 
         if (result == null) return ResponseEntity.badRequest().body(null);
@@ -54,7 +46,7 @@ public class UserController {
     }
 
     @GetMapping("/getByUsername/{username}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable String username) {
+    public ResponseEntity<UserDTO> getUser(@PathVariable String username) throws Exception {
         UserDTO result = userService.getUser(username);
 
         if (result == null) return ResponseEntity.badRequest().body(null);

@@ -2,15 +2,7 @@ package com.greenimpact.server.organization;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,7 +23,7 @@ public class OrganizationController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<OrganizationDTO> getOrganization(@PathVariable Long id) {
+    public ResponseEntity<OrganizationDTO> getOrganization(@PathVariable Long id) throws Exception {
         OrganizationDTO result = organizationService.getOrganization(id);
 
         if (result == null) return ResponseEntity.badRequest().body(null);
@@ -44,7 +36,8 @@ public class OrganizationController {
     }
 
     @PostMapping("/{organizationId}/addUser")
-    public ResponseEntity<OrganizationDTO> addUser(@PathVariable Long organizationId, @RequestParam Long userId, @RequestParam String role) {
+    public ResponseEntity<OrganizationDTO> addUser(@PathVariable Long organizationId, @RequestParam Long userId,
+                                                   @RequestParam String role) throws Exception {
         OrganizationDTO result = organizationService.addUser(organizationId, userId, role);
 
         if (result == null) return ResponseEntity.badRequest().body(null);
@@ -52,7 +45,8 @@ public class OrganizationController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrganizationDTO> updateOrganization(@PathVariable Long id, @RequestBody OrganizationDTO organization) {
+    public ResponseEntity<OrganizationDTO> updateOrganization(@PathVariable Long id,
+                                                              @RequestBody OrganizationDTO organization) throws Exception {
         OrganizationDTO result = organizationService.updateOrganization(id, organization);
 
         if (result == null) return ResponseEntity.badRequest().body(null);
@@ -68,7 +62,8 @@ public class OrganizationController {
     }
 
     @DeleteMapping("/{organizationId}/removeUser")
-    public ResponseEntity<OrganizationDTO> removeUser(@PathVariable Long organizationId, @RequestParam Long userId) {
+    public ResponseEntity<OrganizationDTO> removeUser(@PathVariable Long organizationId,
+                                                      @RequestParam Long userId) throws Exception {
         OrganizationDTO result = organizationService.removeUser(organizationId, userId);
 
         if (result == null) return ResponseEntity.badRequest().body(null);

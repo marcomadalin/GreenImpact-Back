@@ -49,17 +49,19 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll().stream().map(UserEntity::toDTO).collect(Collectors.toList());
     }
 
-    public UserDTO getUser(Long id) {
+    public UserDTO getUser(Long id) throws Exception {
         Optional<UserEntity> userOpt = userRepository.findById(id);
-        return userOpt.map(UserEntity::toDTO).orElse(null);
+        if (userOpt.isEmpty()) throw new Exception("USER DOES NOT EXIST");
+        return userOpt.get().toDTO();
     }
 
-    public UserDTO getUser(String username) {
+    public UserDTO getUser(String username) throws Exception {
         Optional<UserEntity> userOpt = userRepository.findByUsername(username);
-        return userOpt.map(UserEntity::toDTO).orElse(null);
+        if (userOpt.isEmpty()) throw new Exception("USER DOES NOT EXIST");
+        return userOpt.get().toDTO();
     }
 
-    public UserDTO createUser(UserDTO userDTO) {
+    public UserDTO createUser(UserDTO userDTO) throws Exception {
         Optional<OrganizationEntity> organizationOpt = organizationRepository.findById(userDTO.getLoggedOrganization().getId());
         if (organizationOpt.isPresent()) {
             UserEntity user = new UserEntity(userDTO);
@@ -70,8 +72,7 @@ public class UserService implements UserDetailsService {
             UserDTO result = userRepository.findById(user.getId()).get().toDTO();
             result.setRole(userDTO.getRole());
             return result;
-        }
-        return null;
+        } else throw new Exception("ORGANIZATION DOES NOT EXISTS");
     }
 
     public String changeOrganization(Long organizationId, String username) throws Exception {
@@ -96,8 +97,7 @@ public class UserService implements UserDetailsService {
             act.setSurname(user.getSurname());
             act.setPhoneNumber(user.getPhoneNumber());
             return userRepository.save(act).toDTO();
-        }
-        else throw new Exception("USER DOES NOT EXIST");
+        } else throw new Exception("USER DOES NOT EXIST");
     }
 
     public UserDTO updateLocale(Long id, String locale) throws Exception {
@@ -107,8 +107,7 @@ public class UserService implements UserDetailsService {
             UserEntity act = userOpt.get();
             act.setLocale(locale);
             return userRepository.save(act).toDTO();
-        }
-        else throw new Exception("USER DOES NOT EXIST");
+        } else throw new Exception("USER DOES NOT EXIST");
     }
 
     public UserDTO changePassword(Long id, String oldPassword, String newPassword) throws Exception {
@@ -116,11 +115,11 @@ public class UserService implements UserDetailsService {
 
         if (userOpt.isPresent()) {
             UserEntity act = userOpt.get();
-            if (!new BCryptPasswordEncoder().matches(oldPassword, act.getPassword())) throw new Exception("INCORRECT PASSWORD");
+            if (!new BCryptPasswordEncoder().matches(oldPassword, act.getPassword()))
+                throw new Exception("INCORRECT PASSWORD");
             act.setPassword(new BCryptPasswordEncoder().encode(newPassword));
             return userRepository.save(act).toDTO();
-        }
-        else throw new Exception("USER DOES NOT EXIST");
+        } else throw new Exception("USER DOES NOT EXIST");
     }
 
     public void deleteUser(Long id) {

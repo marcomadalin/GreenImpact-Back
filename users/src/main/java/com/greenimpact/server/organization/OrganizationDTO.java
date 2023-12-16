@@ -12,6 +12,8 @@ import java.util.List;
 public class OrganizationDTO {
 
     private Long id;
+    private Boolean enabled;
+    private String type;
     private String name;
     private List<UserRoleDTO> users;
 }

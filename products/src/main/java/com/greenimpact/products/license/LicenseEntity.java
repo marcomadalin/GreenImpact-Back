@@ -22,7 +22,6 @@ public class LicenseEntity {
     @Column
     private Long organizationId;
 
-    @Column(nullable = false)
     private String key;
 
     @Column

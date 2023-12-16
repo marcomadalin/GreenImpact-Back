@@ -34,39 +34,38 @@ public class OrganizationService {
         return organizationRepository.findAll().stream().map(OrganizationEntity::toDTO).collect(Collectors.toList());
     }
 
-    public OrganizationDTO getOrganization(Long id) {
+    public OrganizationDTO getOrganization(Long id) throws Exception {
         Optional<OrganizationEntity> organizationOpt = organizationRepository.findById(id);
+        if (organizationOpt.isEmpty()) throw new Exception("ORGANIZATION DOES NOT EXISTS");
 
-        return organizationOpt.map(OrganizationEntity::toDTO).orElse(null);
+        return organizationOpt.get().toDTO();
     }
 
     public OrganizationDTO createOrganization(OrganizationDTO organization) {
         return organizationRepository.save(new OrganizationEntity(organization)).toDTO();
     }
 
-    public OrganizationDTO addUser(Long organizationId, Long userId, String role) {
+    public OrganizationDTO addUser(Long organizationId, Long userId, String role) throws Exception {
         Optional<OrganizationEntity> organizationOpt = organizationRepository.findById(organizationId);
-        if (organizationOpt.isEmpty()) return null;
+        if (organizationOpt.isEmpty()) throw new Exception("ORGANIZATION DOES NOT EXISTS");
 
         Optional<UserEntity> userOpt = userRepository.findById(userId);
-        if (userOpt.isEmpty()) return null;
+        if (userOpt.isEmpty()) throw new Exception("USER DOES NOT EXISTS");
 
         RoleEntity result = roleRepository.save(new RoleEntity(userOpt.get(), organizationOpt.get(), RoleEnum.valueOf(role)));
         organizationOpt.get().getRoles().add(result);
         return organizationOpt.get().toDTO();
     }
 
-    public OrganizationDTO updateOrganization(Long id, OrganizationDTO organization) {
+    public OrganizationDTO updateOrganization(Long id, OrganizationDTO organization) throws Exception {
         Optional<OrganizationEntity> userOpt = organizationRepository.findById(id);
 
         if (userOpt.isPresent()) {
             OrganizationEntity act = userOpt.get();
-
+            act.setEnabled(organization.getEnabled());
             act.setName(organization.getName());
             return organizationRepository.save(act).toDTO();
-        }
-
-        return null;
+        } else throw new Exception("ORGANIZATION DOES NOT EXISTS");
     }
 
     public void deleteOrganization(Long id) {
@@ -75,12 +74,12 @@ public class OrganizationService {
 
 
     @Transactional
-    public OrganizationDTO removeUser(Long organizationId, Long userId) {
+    public OrganizationDTO removeUser(Long organizationId, Long userId) throws Exception {
         Optional<OrganizationEntity> organizationOpt = organizationRepository.findById(organizationId);
-        if (organizationOpt.isEmpty()) return null;
+        if (organizationOpt.isEmpty()) throw new Exception("ORGANIZATION DOES NOT EXISTS");
 
         Optional<UserEntity> userOpt = userRepository.findById(userId);
-        if (userOpt.isEmpty()) return null;
+        if (userOpt.isEmpty()) throw new Exception("USER DOES NOT EXISTS");
 
         roleRepository.deleteById(new RoleKey(userId, organizationId));
         return organizationRepository.findById(organizationId).get().toDTO();

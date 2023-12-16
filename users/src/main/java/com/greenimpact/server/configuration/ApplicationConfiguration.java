@@ -2,6 +2,7 @@ package com.greenimpact.server.configuration;
 
 import com.greenimpact.server.organization.OrganizationEntity;
 import com.greenimpact.server.organization.OrganizationRepository;
+import com.greenimpact.server.organization.OrganizationType;
 import com.greenimpact.server.role.RoleEntity;
 import com.greenimpact.server.role.RoleEnum;
 import com.greenimpact.server.role.RoleRepository;
@@ -49,10 +50,10 @@ public class ApplicationConfiguration {
     CommandLineRunner commandLineRunner(UserRepository userRepository, RoleRepository roleRepository,
                                         OrganizationRepository organizationRepository) {
         return args -> {
-            OrganizationEntity greenImpact = new OrganizationEntity("GreenImpact");
+            OrganizationEntity greenImpact = new OrganizationEntity(true, OrganizationType.MASTER, "GreenImpact");
             greenImpact = organizationRepository.save(greenImpact);
 
-            OrganizationEntity greenPeace = new OrganizationEntity("GreenPeace");
+            OrganizationEntity greenPeace = new OrganizationEntity(true, OrganizationType.SUSTAINABLE_ENTITY, "GreenPeace");
             greenPeace = organizationRepository.save(greenPeace);
 
             UserEntity marco = new UserEntity("madalin@gmail.com", new BCryptPasswordEncoder().encode("123"), "Marco", "Madalin", "ca", "12345678");

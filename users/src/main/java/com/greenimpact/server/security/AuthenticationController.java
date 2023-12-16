@@ -4,13 +4,7 @@ import com.greenimpact.server.user.UserDTO;
 import com.greenimpact.server.user.UserService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Objects;
 
@@ -31,7 +25,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/whoami")
-    public ResponseEntity<UserDTO> whoami(@RequestHeader HttpHeaders headers) {
+    public ResponseEntity<UserDTO> whoami(@RequestHeader HttpHeaders headers) throws Exception {
         UserDTO result = userService.getUser(jwtService.extractUsername(Objects.requireNonNull(headers.get("authorization")).get(0).substring(7)));
 
         if (result == null) return ResponseEntity.badRequest().body(null);
@@ -53,7 +47,7 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<UserDTO> signup(@RequestBody UserDTO user) {
+    public ResponseEntity<UserDTO> signup(@RequestBody UserDTO user) throws Exception {
         UserDTO result = userService.createUser(user);
 
         if (result == null) return ResponseEntity.badRequest().body(null);
