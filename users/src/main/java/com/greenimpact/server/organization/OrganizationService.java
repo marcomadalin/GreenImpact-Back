@@ -4,12 +4,14 @@ import com.greenimpact.server.role.RoleEntity;
 import com.greenimpact.server.role.RoleEnum;
 import com.greenimpact.server.role.RoleKey;
 import com.greenimpact.server.role.RoleRepository;
+import com.greenimpact.server.user.UserDTO;
 import com.greenimpact.server.user.UserEntity;
 import com.greenimpact.server.user.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,6 +36,15 @@ public class OrganizationService {
         return organizationRepository.findAll().stream().map(OrganizationEntity::toDTO).collect(Collectors.toList());
     }
 
+    public List<UserDTO> getOrganizationUsers(Long organizationId) throws Exception {
+        Optional<OrganizationEntity> organizationOpt = organizationRepository.findById(organizationId);
+        if (organizationOpt.isEmpty()) throw new Exception("ORGANIZATION DOES NOT EXISTS");
+
+        List<UserEntity> users = userRepository.findAllById(organizationOpt.get().getRoles().stream()
+                .map(role -> role.getUser().getId()).collect(Collectors.toList()));
+        return users.stream().map(UserEntity::toDTO).collect(Collectors.toList());
+    }
+
     public OrganizationDTO getOrganization(Long id) throws Exception {
         Optional<OrganizationEntity> organizationOpt = organizationRepository.findById(id);
         if (organizationOpt.isEmpty()) throw new Exception("ORGANIZATION DOES NOT EXISTS");
@@ -52,7 +63,7 @@ public class OrganizationService {
         Optional<UserEntity> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) throw new Exception("USER DOES NOT EXISTS");
 
-        RoleEntity result = roleRepository.save(new RoleEntity(userOpt.get(), organizationOpt.get(), RoleEnum.valueOf(role)));
+        RoleEntity result = roleRepository.save(new RoleEntity(userOpt.get(), organizationOpt.get(), RoleEnum.valueOf(role), LocalDate.now()));
         organizationOpt.get().getRoles().add(result);
         return organizationOpt.get().toDTO();
     }
@@ -81,7 +92,9 @@ public class OrganizationService {
         Optional<UserEntity> userOpt = userRepository.findById(userId);
         if (userOpt.isEmpty()) throw new Exception("USER DOES NOT EXISTS");
 
-        roleRepository.deleteById(new RoleKey(userId, organizationId));
+        if (userOpt.get().getRoles().size() == 1) userRepository.deleteById(userOpt.get().getId());
+        else roleRepository.deleteById(new RoleKey(userId, organizationId));
         return organizationRepository.findById(organizationId).get().toDTO();
     }
+
 }

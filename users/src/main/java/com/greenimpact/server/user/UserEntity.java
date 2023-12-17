@@ -2,16 +2,7 @@ package com.greenimpact.server.user;
 
 import com.greenimpact.server.organization.OrganizationEntity;
 import com.greenimpact.server.role.RoleEntity;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,9 +10,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -51,6 +44,9 @@ public class UserEntity implements UserDetails {
     @Column(nullable = false)
     private String phoneNumber;
 
+    @Column(nullable = false)
+    private Boolean enabled;
+
     @JoinColumn(name = "lastLoggedOrgId", nullable = false)
     @ManyToOne
     private OrganizationEntity loggedOrganization;
@@ -58,13 +54,14 @@ public class UserEntity implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     private List<RoleEntity> roles;
 
-    public UserEntity(String username, String password, String name, String surname, String locale, String phoneNumber) {
+    public UserEntity(String username, String password, String name, String surname, String locale, String phoneNumber, Boolean enabled) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.surname = surname;
         this.locale = locale;
         this.phoneNumber = phoneNumber;
+        this.enabled = enabled;
         this.loggedOrganization = null;
         this.roles = new ArrayList<>();
     }
@@ -76,6 +73,7 @@ public class UserEntity implements UserDetails {
         this.surname = user.getSurname();
         this.locale = user.getLocale();
         this.phoneNumber = user.getPhoneNumber();
+        this.enabled = user.getEnabled();
         this.loggedOrganization = null;
         this.roles = new ArrayList<>();
     }
@@ -110,16 +108,18 @@ public class UserEntity implements UserDetails {
     }
 
     public UserDTO toDTO() {
-        return new UserDTO(id, username, password, name, surname, locale, phoneNumber, loggedOrganization.toSimplifiedDTO(),
-                roles.stream()
-                        .filter(role -> role.getOrganization().getId().equals(loggedOrganization.getId()))
-                        .findFirst()
-                        .map(foundRole -> foundRole.getRole().toString())
-                        .orElse(""));
+        RoleEntity foundRole = null;
+        Optional<RoleEntity> opt = roles.stream()
+                .filter(role -> role.getOrganization().getId().equals(loggedOrganization.getId()))
+                .findFirst();
+        if (opt.isPresent()) foundRole = opt.get();
+
+        return new UserDTO(id, username, password, name, surname, locale, phoneNumber, enabled, loggedOrganization.toSimplifiedDTO(),
+                foundRole != null ? foundRole.getRole().toString() : "", foundRole != null ? foundRole.getMembershipDate() : LocalDate.now());
     }
 
     public UserDTO toSimplifiedDTO() {
-        return new UserDTO(id, username, password, name, surname,  locale, phoneNumber, null, null);
+        return new UserDTO(id, username, password, name, surname, locale, phoneNumber, enabled, null, null, null);
     }
 
 
@@ -133,6 +133,7 @@ public class UserEntity implements UserDetails {
                 ", surname='" + surname + '\'' +
                 ", locale=" + locale + '\'' +
                 ", phoneNumber=" + phoneNumber + '\'' +
+                ", enabled=" + enabled + '\'' +
                 ", loggedOrganization=" + loggedOrganization.toSimplifiedDTO().toString() + '\'' +
                 ", role=" + roles.stream()
                 .filter(role -> role.getOrganization().getId().equals(loggedOrganization.getId()))

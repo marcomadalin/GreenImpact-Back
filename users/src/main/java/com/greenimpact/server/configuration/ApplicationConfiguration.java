@@ -20,6 +20,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Configuration
@@ -56,19 +57,19 @@ public class ApplicationConfiguration {
             OrganizationEntity greenPeace = new OrganizationEntity(true, OrganizationType.SUSTAINABLE_ENTITY, "GreenPeace");
             greenPeace = organizationRepository.save(greenPeace);
 
-            UserEntity marco = new UserEntity("madalin@gmail.com", new BCryptPasswordEncoder().encode("123"), "Marco", "Madalin", "ca", "12345678");
+            UserEntity marco = new UserEntity("madalin@gmail.com", new BCryptPasswordEncoder().encode("123"), "Marco", "Madalin", "ca", "12345678", true);
             marco.setLoggedOrganization(greenImpact);
             marco = userRepository.save(marco);
 
-            UserEntity karina = new UserEntity("karina@gmail.com", new BCryptPasswordEncoder().encode("123"), "Karina", "Decsei", "es", "12345678");
+            UserEntity karina = new UserEntity("karina@gmail.com", new BCryptPasswordEncoder().encode("123"), "Karina", "Decsei", "es", "12345678", true);
             karina.setLoggedOrganization(greenPeace);
             karina = userRepository.save(karina);
 
-            RoleEntity roleMarco1 = new RoleEntity(marco, greenImpact, RoleEnum.SUPER);
-            RoleEntity roleMarco2 = new RoleEntity(marco, greenPeace, RoleEnum.USER);
+            RoleEntity roleMarco1 = new RoleEntity(marco, greenImpact, RoleEnum.SUPER, LocalDate.now().minusYears(7));
+            RoleEntity roleMarco2 = new RoleEntity(marco, greenPeace, RoleEnum.USER, LocalDate.now().minusYears(8));
 
-            RoleEntity roleKarina1 = new RoleEntity(karina, greenImpact, RoleEnum.EDITOR);
-            RoleEntity roleKarina2 = new RoleEntity(karina, greenPeace, RoleEnum.ADMINISTRATOR);
+            RoleEntity roleKarina1 = new RoleEntity(karina, greenImpact, RoleEnum.EDITOR, LocalDate.now().minusYears(4));
+            RoleEntity roleKarina2 = new RoleEntity(karina, greenPeace, RoleEnum.ADMINISTRATOR, LocalDate.now().minusYears(6));
 
             roleRepository.saveAll(List.of(roleMarco1, roleMarco2, roleKarina1, roleKarina2));
         };

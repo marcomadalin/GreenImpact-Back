@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -63,16 +64,22 @@ public class UserService implements UserDetailsService {
 
     public UserDTO createUser(UserDTO userDTO) throws Exception {
         Optional<OrganizationEntity> organizationOpt = organizationRepository.findById(userDTO.getLoggedOrganization().getId());
-        if (organizationOpt.isPresent()) {
-            UserEntity user = new UserEntity(userDTO);
+        if (organizationOpt.isEmpty()) throw new Exception("ORGANIZATION DOES NOT EXISTS");
+
+        Optional<UserEntity> userExist = userRepository.findByUsername(userDTO.getUsername());
+        UserEntity user;
+        if (userExist.isPresent()) user = userExist.get();
+        else {
+            user = new UserEntity(userDTO);
             user.setLoggedOrganization(organizationOpt.get());
-            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+            user.setPassword(new BCryptPasswordEncoder().encode(user.getUsername()));
             user = userRepository.save(user);
-            organizationService.addUser(organizationOpt.get().getId(), user.getId(), userDTO.getRole());
-            UserDTO result = userRepository.findById(user.getId()).get().toDTO();
-            result.setRole(userDTO.getRole());
-            return result;
-        } else throw new Exception("ORGANIZATION DOES NOT EXISTS");
+        }
+        organizationService.addUser(organizationOpt.get().getId(), user.getId(), userDTO.getRole());
+        UserDTO result = userRepository.findById(user.getId()).get().toDTO();
+        result.setRole(userDTO.getRole());
+        result.setMembershipDate(LocalDate.now());
+        return result;
     }
 
     public String changeOrganization(Long organizationId, String username) throws Exception {
@@ -92,7 +99,6 @@ public class UserService implements UserDetailsService {
         if (userOpt.isPresent()) {
             UserEntity act = userOpt.get();
             user.setUsername(act.getUsername());
-            user.setPassword(new BCryptPasswordEncoder().encode(act.getPassword()));
             act.setName(user.getName());
             act.setSurname(user.getSurname());
             act.setPhoneNumber(user.getPhoneNumber());

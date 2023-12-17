@@ -2,18 +2,12 @@ package com.greenimpact.server.role;
 
 import com.greenimpact.server.organization.OrganizationEntity;
 import com.greenimpact.server.user.UserEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.EmbeddedId;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.MapsId;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -39,11 +33,15 @@ public class RoleEntity {
     @Enumerated(EnumType.STRING)
     RoleEnum role;
 
-    public RoleEntity(UserEntity user, OrganizationEntity organization, RoleEnum role) {
+    @Column
+    private LocalDate membershipDate;
+
+    public RoleEntity(UserEntity user, OrganizationEntity organization, RoleEnum role, LocalDate membershipDate) {
         this.id = new RoleKey(user.getId(), organization.getId());
         this.user = user;
         this.organization = organization;
         this.role = role;
+        this.membershipDate = membershipDate;
     }
 
 

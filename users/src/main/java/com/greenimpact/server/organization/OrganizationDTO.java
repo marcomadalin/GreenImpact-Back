@@ -1,5 +1,6 @@
 package com.greenimpact.server.organization;
 
+import com.greenimpact.server.role.UserRoleDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

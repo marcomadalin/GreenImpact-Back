@@ -1,6 +1,7 @@
 package com.greenimpact.server.organization;
 
 import com.greenimpact.server.role.RoleEntity;
+import com.greenimpact.server.role.UserRoleDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -49,7 +50,7 @@ public class OrganizationEntity {
 
     public OrganizationDTO toDTO() {
         return new OrganizationDTO(id, enabled, type.toString(), name, roles.stream().map(role ->
-                new UserRoleDTO(role.getUser().toSimplifiedDTO(), role.getRole().toString())).collect(Collectors.toList()));
+                new UserRoleDTO(role.getUser().toSimplifiedDTO(), role.getRole().toString(), role.getMembershipDate())).collect(Collectors.toList()));
     }
 
     public OrganizationDTO toSimplifiedDTO() {
@@ -64,7 +65,7 @@ public class OrganizationEntity {
                 ", type='" + type + '\'' +
                 ", name='" + name + '\'' +
                 ", roles=" + roles.stream().map(role ->
-                new UserRoleDTO(role.getUser().toSimplifiedDTO(), role.getRole().toString())).toList() + '\'' +
+                new UserRoleDTO(role.getUser().toSimplifiedDTO(), role.getRole().toString(), role.getMembershipDate())).toList() + '\'' +
                 '}';
     }
 }

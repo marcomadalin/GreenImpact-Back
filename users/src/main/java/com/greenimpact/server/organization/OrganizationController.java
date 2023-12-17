@@ -1,5 +1,6 @@
 package com.greenimpact.server.organization;
 
+import com.greenimpact.server.user.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,15 @@ public class OrganizationController {
     public ResponseEntity<List<OrganizationDTO>> getOrganizations() {
         return ResponseEntity.ok().body(organizationService.getAllOrganizations());
     }
+
+    @GetMapping("/{organizationId}/allUsers")
+    public ResponseEntity<List<UserDTO>> getOrganizationUsers(@PathVariable Long organizationId) throws Exception {
+        List<UserDTO> result = organizationService.getOrganizationUsers(organizationId);
+
+        if (result == null) return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.ok().body(result);
+    }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<OrganizationDTO> getOrganization(@PathVariable Long id) throws Exception {

@@ -53,6 +53,14 @@ public class UserController {
         return ResponseEntity.ok().body(result);
     }
 
+    @PostMapping("/new")
+    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user) throws Exception {
+        UserDTO result = userService.createUser(user);
+
+        if (result == null) return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.ok().body(result);
+    }
+
     @PutMapping("/changeOrganization")
     public ResponseEntity<String> changeOrganization(@RequestHeader HttpHeaders headers, @RequestParam Long organizationId) throws Exception {
         String token = Objects.requireNonNull(headers.get("authorization")).get(0).substring(7);
