@@ -1,5 +1,8 @@
 package com.greenimpact.indicators.indicator;
 
+import com.greenimpact.indicators.measures.MeasureDTO;
+import com.greenimpact.indicators.measures.MeasureDocument;
+import com.greenimpact.indicators.measures.MeasureRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,20 +14,37 @@ public class IndicatorService {
 
     private final IndicatorRepository indicatorRepository;
 
+    private final MeasureRepository measureRepository;
 
-    public IndicatorService(IndicatorRepository indicatorRepository) {
+
+    public IndicatorService(IndicatorRepository indicatorRepository, MeasureRepository measureRepository) {
         this.indicatorRepository = indicatorRepository;
+        this.measureRepository = measureRepository;
     }
 
     public List<IndicatorDTO> getAllIndicators() {
-        return indicatorRepository.findAll().stream().map(IndicatorDocument::toDTO).collect(Collectors.toList());
+        return indicatorRepository.findAll().stream().map(indicatorDocument -> {
+            IndicatorDTO result = indicatorDocument.toDTO();
+            Optional<MeasureDocument> measureOpt = measureRepository.findById(indicatorDocument.getMeasureId());
+            if (measureOpt.isEmpty()) throw new RuntimeException("MEASURE DOES NOT EXIST");
+            result.setMeasure(measureOpt.get().toDTO());
+            return result;
+        }).collect(Collectors.toList());
+    }
+
+    public List<MeasureDTO> getAllMeasures() {
+        return measureRepository.findAll().stream().map(MeasureDocument::toDTO).collect(Collectors.toList());
     }
 
     public IndicatorDTO getIndicator(String id) throws Exception {
         Optional<IndicatorDocument> indicatorOpt = indicatorRepository.findById(id);
         if (indicatorOpt.isEmpty()) throw new Exception("INDICATOR DOES NOT EXIST");
+        IndicatorDTO result = indicatorOpt.get().toDTO();
 
-        return indicatorOpt.get().toDTO();
+        Optional<MeasureDocument> measureOpt = measureRepository.findById(indicatorOpt.get().getMeasureId());
+        if (measureOpt.isEmpty()) throw new Exception("MEASURE DOES NOT EXIST");
+        result.setMeasure(measureOpt.get().toDTO());
+        return result;
     }
 
     public IndicatorDTO createIndicator(IndicatorDTO indicatorDTO) {

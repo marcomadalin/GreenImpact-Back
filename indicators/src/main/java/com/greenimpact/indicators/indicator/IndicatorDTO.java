@@ -1,5 +1,6 @@
 package com.greenimpact.indicators.indicator;
 
+import com.greenimpact.indicators.measures.MeasureDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 public class IndicatorDTO {
     private String id;
+
+    private MeasureDTO measure;
 
     private String name;
 

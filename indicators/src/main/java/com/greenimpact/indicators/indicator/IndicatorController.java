@@ -1,5 +1,6 @@
 package com.greenimpact.indicators.indicator;
 
+import com.greenimpact.indicators.measures.MeasureDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,11 @@ public class IndicatorController {
     @GetMapping("/all")
     public ResponseEntity<List<IndicatorDTO>> getIndicators() {
         return ResponseEntity.ok().body(indicatorService.getAllIndicators());
+    }
+
+    @GetMapping("/allMeasures")
+    public ResponseEntity<List<MeasureDTO>> getMeasures() {
+        return ResponseEntity.ok().body(indicatorService.getAllMeasures());
     }
 
     @GetMapping("/{id}")
