@@ -4,6 +4,7 @@ import com.greenimpact.plans.area.AreaEntity;
 import com.greenimpact.plans.area.AreaRepository;
 import com.greenimpact.plans.areaIndicator.AreaIndicatorEntity;
 import com.greenimpact.plans.areaIndicator.AreaIndicatorRepository;
+import com.greenimpact.plans.areaIndicator.TendencyEnum;
 import com.greenimpact.plans.goal.GoalEntity;
 import com.greenimpact.plans.plan.PlanEntity;
 import com.greenimpact.plans.plan.PlanRepository;
@@ -37,7 +38,7 @@ public class ApplicationConfiguration {
                     LocalDate.now().minusYears(3), LocalDate.now().plusYears(2), plan2);
             area1 = areaRepository.save(area1);
 
-            AreaIndicatorEntity indicator1 = new AreaIndicatorEntity(1L, area1);
+            AreaIndicatorEntity indicator1 = new AreaIndicatorEntity(1L, area1, TendencyEnum.NEUTRAL);
             indicator1 = areaIndicatorRepository.save(indicator1);
 
             GoalEntity objective1 = new GoalEntity(LocalDateTime.now().plusYears(2), Boolean.toString(true), null, indicator1);
@@ -45,6 +46,10 @@ public class ApplicationConfiguration {
 
             SampleEntity sample = new SampleEntity(LocalDateTime.now().plusMonths(2), Boolean.toString(false), null, indicator1);
             sample = sampleRepository.save(sample);
+
+            SampleEntity sample2 = new SampleEntity(LocalDateTime.now().plusMonths(3), Boolean.toString(false), null, indicator1);
+            sample2 = sampleRepository.save(sample2);
+
 
         };
     }

@@ -16,6 +16,8 @@ public class AreaIndicatorDTO {
 
     private Long indicatorId;
 
+    private String tendency;
+
     private List<SampleDTO> samples;
 
     private List<SampleDTO> goals;

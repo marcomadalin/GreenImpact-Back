@@ -3,13 +3,7 @@ package com.greenimpact.plans.areaIndicator;
 import com.greenimpact.plans.area.AreaEntity;
 import com.greenimpact.plans.goal.GoalEntity;
 import com.greenimpact.plans.sample.SampleEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,6 +25,9 @@ public class AreaIndicatorEntity {
     @Column
     private Long indicatorId;
 
+    @Column
+    private TendencyEnum tendency;
+
     @OneToMany(mappedBy = "areaIndicator")
     private List<SampleEntity> samples;
 
@@ -40,21 +37,23 @@ public class AreaIndicatorEntity {
     @ManyToOne
     private AreaEntity area;
 
-    public AreaIndicatorEntity(Long indicatorId, AreaEntity area) {
+    public AreaIndicatorEntity(Long indicatorId, AreaEntity area, TendencyEnum tendency) {
         this.indicatorId = indicatorId;
         this.area = area;
+        this.tendency = tendency;
         this.goals = Collections.emptyList();
         this.samples = Collections.emptyList();
     }
 
     public AreaIndicatorEntity(AreaIndicatorDTO areaIndicatorDTO) {
         this.indicatorId = areaIndicatorDTO.getIndicatorId();
+        this.tendency = TendencyEnum.valueOf(areaIndicatorDTO.getTendency());
         this.goals = Collections.emptyList();
         this.samples = Collections.emptyList();
     }
 
     public AreaIndicatorDTO toDTO() {
-        return new AreaIndicatorDTO(id, indicatorId, samples.stream().map(SampleEntity::toDTO).collect(Collectors.toList()),
+        return new AreaIndicatorDTO(id, indicatorId, tendency.toString(), samples.stream().map(SampleEntity::toDTO).collect(Collectors.toList()),
                 goals.stream().map(SampleEntity::toDTO).collect(Collectors.toList()));
     }
 }

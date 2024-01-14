@@ -9,6 +9,7 @@ import com.greenimpact.plans.plan.PlanRepository;
 import com.greenimpact.plans.sample.SampleService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,6 +45,18 @@ public class AreaIndicatorService {
         if (areaOpt.isEmpty()) throw new Exception("AREA DOES NOT EXISTS");
 
         return areaIndicatorRepository.findByArea(areaOpt.get()).stream().map(AreaIndicatorEntity::toDTO).collect(Collectors.toList());
+    }
+
+    public List<AreaIndicatorDTO> getAllPositiveIndicators(Long organizationId, TendencyEnum tendencyEnum) {
+        List<PlanEntity> allPlans = planRepository.findAllByOrOrganizationId(organizationId);
+        List<AreaIndicatorDTO> resultIndicators = new ArrayList<>();
+        allPlans.forEach(planEntity -> {
+            planEntity.getAreas().forEach(areaEntity -> {
+                resultIndicators.addAll(areaEntity.getIndicators().stream().filter(areaIndicatorEntity ->
+                        areaIndicatorEntity.getTendency().equals(tendencyEnum)).map(AreaIndicatorEntity::toDTO).toList());
+            });
+        });
+        return resultIndicators;
     }
 
     public AreaIndicatorDTO getAreaIndicator(Long id) throws Exception {
