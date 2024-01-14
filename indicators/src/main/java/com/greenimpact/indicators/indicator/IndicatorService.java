@@ -32,6 +32,16 @@ public class IndicatorService {
         }).collect(Collectors.toList());
     }
 
+    public List<IndicatorDTO> getAllFrameworkIndicators(Framework framework) {
+        return indicatorRepository.findByFramework(framework).stream().map(indicatorDocument -> {
+            IndicatorDTO result = indicatorDocument.toDTO();
+            Optional<MeasureDocument> measureOpt = measureRepository.findById(indicatorDocument.getMeasureId());
+            if (measureOpt.isEmpty()) throw new RuntimeException("MEASURE DOES NOT EXIST");
+            result.setMeasure(measureOpt.get().toDTO());
+            return result;
+        }).collect(Collectors.toList());
+    }
+
     public List<MeasureDTO> getAllMeasures() {
         return measureRepository.findAll().stream().map(MeasureDocument::toDTO).collect(Collectors.toList());
     }

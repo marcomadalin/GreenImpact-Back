@@ -9,7 +9,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/indicators")
 public class IndicatorController {
-
+    //TODO ADD ORGID TO SEARCH
     private final IndicatorService indicatorService;
 
 
@@ -20,6 +20,11 @@ public class IndicatorController {
     @GetMapping("/all")
     public ResponseEntity<List<IndicatorDTO>> getIndicators() {
         return ResponseEntity.ok().body(indicatorService.getAllIndicators());
+    }
+
+    @GetMapping("/byFramework")
+    public ResponseEntity<List<IndicatorDTO>> getAllFrameworkIndicators(@RequestParam Framework framework) {
+        return ResponseEntity.ok().body(indicatorService.getAllFrameworkIndicators(framework));
     }
 
     @GetMapping("/allMeasures")

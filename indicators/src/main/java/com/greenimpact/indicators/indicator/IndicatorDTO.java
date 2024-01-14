@@ -13,6 +13,8 @@ import java.util.List;
 public class IndicatorDTO {
     private String id;
 
+    private Long organizationId;
+
     private MeasureDTO measure;
 
     private String name;

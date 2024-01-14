@@ -18,6 +18,8 @@ public class IndicatorDocument {
 
     private String measureId;
 
+    private Long organizationId;
+
     private String name;
 
     private IndicatorType type;
@@ -26,7 +28,8 @@ public class IndicatorDocument {
 
     private List<Long> impact;
 
-    public IndicatorDocument(String name, String measureId, IndicatorType type, Framework framework, List<Long> impact) {
+    public IndicatorDocument(String name, Long organizationId, String measureId, IndicatorType type, Framework framework, List<Long> impact) {
+        this.organizationId = organizationId;
         this.measureId = measureId;
         this.name = name;
         this.type = type;
@@ -35,6 +38,7 @@ public class IndicatorDocument {
     }
 
     public IndicatorDocument(IndicatorDTO indicatorDTO) {
+        this.organizationId = getOrganizationId();
         this.measureId = indicatorDTO.getMeasure().getId();
         this.name = indicatorDTO.getName();
         this.type = IndicatorType.valueOf(indicatorDTO.getType());
@@ -43,6 +47,6 @@ public class IndicatorDocument {
     }
 
     public IndicatorDTO toDTO() {
-        return new IndicatorDTO(id, null, name, type.toString(), framework.toString(), impact);
+        return new IndicatorDTO(id, organizationId, null, name, type.toString(), framework.toString(), impact);
     }
 }

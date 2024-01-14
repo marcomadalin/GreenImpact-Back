@@ -21,7 +21,9 @@ public class ApplicationConfiguration {
     CommandLineRunner commandLineRunner(IndicatorRepository indicatorRepository, MeasureRepository measureRepository) {
         return args -> {
             MeasureDocument measure = measureRepository.save(new MeasureDocument("Weight", List.of("Kg")));
-            indicatorRepository.save(new IndicatorDocument("CO2 emission reduction", measure.getId(), IndicatorType.QUANTITATIVE, Framework.MA2030, List.of(1L, 3L, 6L, 12L)));
+            indicatorRepository.save(new IndicatorDocument("CO2 emission reduction", null, measure.getId(), IndicatorType.QUANTITATIVE, Framework.MA2030, List.of(1L, 3L, 6L, 12L)));
+            indicatorRepository.save(new IndicatorDocument("Garbage disposal limitation", 1L, measure.getId(), IndicatorType.QUANTITATIVE, Framework.CUSTOM, List.of(2L, 5L)));
+
         };
     }
 }
