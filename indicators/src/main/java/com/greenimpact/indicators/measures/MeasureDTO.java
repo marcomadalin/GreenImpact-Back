@@ -14,5 +14,7 @@ public class MeasureDTO {
 
     private String name;
 
+    private String type;
+
     private List<String> values;
 }

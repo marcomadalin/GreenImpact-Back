@@ -22,8 +22,8 @@ public class IndicatorService {
         this.measureRepository = measureRepository;
     }
 
-    public List<IndicatorDTO> getAllIndicators() {
-        return indicatorRepository.findAll().stream().map(indicatorDocument -> {
+    public List<IndicatorDTO> getAllIndicators(Long organizationId) {
+        return indicatorRepository.findByOrganizationId(organizationId).stream().map(indicatorDocument -> {
             IndicatorDTO result = indicatorDocument.toDTO();
             Optional<MeasureDocument> measureOpt = measureRepository.findById(indicatorDocument.getMeasureId());
             if (measureOpt.isEmpty()) throw new RuntimeException("MEASURE DOES NOT EXIST");
@@ -32,8 +32,8 @@ public class IndicatorService {
         }).collect(Collectors.toList());
     }
 
-    public List<IndicatorDTO> getAllFrameworkIndicators(Framework framework) {
-        return indicatorRepository.findByFramework(framework).stream().map(indicatorDocument -> {
+    public List<IndicatorDTO> getAllFrameworkIndicators(Long organizationId, Framework framework) {
+        return indicatorRepository.findByOrganizationIdAndFramework(organizationId, framework).stream().map(indicatorDocument -> {
             IndicatorDTO result = indicatorDocument.toDTO();
             Optional<MeasureDocument> measureOpt = measureRepository.findById(indicatorDocument.getMeasureId());
             if (measureOpt.isEmpty()) throw new RuntimeException("MEASURE DOES NOT EXIST");

@@ -38,7 +38,7 @@ public class IndicatorDocument {
     }
 
     public IndicatorDocument(IndicatorDTO indicatorDTO) {
-        this.organizationId = getOrganizationId();
+        this.organizationId = indicatorDTO.getOrganizationId();
         this.measureId = indicatorDTO.getMeasure().getId();
         this.name = indicatorDTO.getName();
         this.type = IndicatorType.valueOf(indicatorDTO.getType());

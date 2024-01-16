@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface IndicatorRepository extends MongoRepository<IndicatorDocument, String> {
 
-    List<IndicatorDocument> findByFramework(Framework framework);
+    List<IndicatorDocument> findByOrganizationId(Long organizationId);
+
+    List<IndicatorDocument> findByOrganizationIdAndFramework(Long organizationId, Framework framework);
 
 }
