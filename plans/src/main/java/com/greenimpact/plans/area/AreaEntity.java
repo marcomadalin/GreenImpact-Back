@@ -2,16 +2,11 @@ package com.greenimpact.plans.area;
 
 import com.greenimpact.plans.areaIndicator.AreaIndicatorEntity;
 import com.greenimpact.plans.plan.PlanEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -44,6 +39,7 @@ public class AreaEntity {
     private List<AreaIndicatorEntity> indicators;
 
     @ManyToOne
+    @ToString.Exclude
     private PlanEntity plan;
 
     public AreaEntity(String name, String description, LocalDate startDate, LocalDate endDate, PlanEntity plan) {
@@ -65,6 +61,11 @@ public class AreaEntity {
 
     public AreaDTO toDTO() {
         return new AreaDTO(id, name, description, startDate, endDate,
-                indicators.stream().map(AreaIndicatorEntity::toDTO).collect(Collectors.toList()));
+                indicators.stream().map(AreaIndicatorEntity::toDTO).collect(Collectors.toList()), plan.toSimplifiedDTO());
+    }
+
+    public AreaDTO toSimplifiedDTO() {
+        return new AreaDTO(id, name, description, startDate, endDate,
+                null, null);
     }
 }

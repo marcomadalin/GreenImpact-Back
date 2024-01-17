@@ -1,18 +1,12 @@
 package com.greenimpact.plans.plan;
 
 import com.greenimpact.plans.area.AreaEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,5 +61,10 @@ public class PlanEntity {
     public PlanDTO toDTO() {
         return new PlanDTO(id, organizationId, name, description, startDate, endDate,
                 areas.stream().map(AreaEntity::toDTO).collect(Collectors.toList()));
+    }
+
+    public PlanDTO toSimplifiedDTO() {
+        return new PlanDTO(id, organizationId, name, description, startDate, endDate,
+                null);
     }
 }

@@ -38,7 +38,7 @@ public class ApplicationConfiguration {
                     LocalDate.now().minusYears(3), LocalDate.now().plusYears(2), plan2);
             area1 = areaRepository.save(area1);
 
-            AreaIndicatorEntity indicator1 = new AreaIndicatorEntity(1L, area1, TendencyEnum.NEUTRAL);
+            AreaIndicatorEntity indicator1 = new AreaIndicatorEntity("65a7ff2f2204e22bf5f44776", area1, TendencyEnum.NEUTRAL);
             indicator1 = areaIndicatorRepository.save(indicator1);
 
             GoalEntity objective1 = new GoalEntity(LocalDateTime.now().plusYears(2), Boolean.toString(true), null, indicator1);

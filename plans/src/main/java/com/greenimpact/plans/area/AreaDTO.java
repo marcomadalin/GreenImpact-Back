@@ -1,6 +1,7 @@
 package com.greenimpact.plans.area;
 
 import com.greenimpact.plans.areaIndicator.AreaIndicatorDTO;
+import com.greenimpact.plans.plan.PlanDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,4 +25,6 @@ public class AreaDTO {
     private LocalDate endDate;
 
     private List<AreaIndicatorDTO> indicators;
+
+    private PlanDTO plan;
 }

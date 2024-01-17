@@ -1,11 +1,13 @@
 package com.greenimpact.plans.area;
 
 
+import com.greenimpact.plans.areaIndicator.AreaIndicatorEntity;
 import com.greenimpact.plans.areaIndicator.AreaIndicatorService;
 import com.greenimpact.plans.plan.PlanEntity;
 import com.greenimpact.plans.plan.PlanRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +31,20 @@ public class AreaService {
         Optional<PlanEntity> planOpt = planRepository.findById(planId);
         if (planOpt.isEmpty()) throw new Exception("PLAN DOES NOT EXISTS");
         return areaRepository.findByPlan(planOpt.get()).stream().map(AreaEntity::toDTO).collect(Collectors.toList());
+    }
+
+    public List<AreaDTO> getRelatedIndicatorAreas(Long organizationId, String indicatorId) {
+        List<PlanEntity> allPlans = planRepository.findAllByOrOrganizationId(organizationId);
+        List<AreaDTO> result = new ArrayList<>();
+        allPlans.forEach(plan -> plan.getAreas().forEach(area -> {
+            for (AreaIndicatorEntity indicator : area.getIndicators()) {
+                if (indicator.getIndicatorId().equals(indicatorId)) {
+                    result.add(area.toDTO());
+                    break;
+                }
+            }
+        }));
+        return result;
     }
 
     public AreaDTO getArea(Long id) throws Exception {

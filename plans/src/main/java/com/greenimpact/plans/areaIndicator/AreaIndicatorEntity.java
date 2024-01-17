@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,7 +24,7 @@ public class AreaIndicatorEntity {
     private Long id;
 
     @Column
-    private Long indicatorId;
+    private String indicatorId;
 
     @Column
     private TendencyEnum tendency;
@@ -35,9 +36,10 @@ public class AreaIndicatorEntity {
     private List<GoalEntity> goals;
 
     @ManyToOne
+    @ToString.Exclude
     private AreaEntity area;
 
-    public AreaIndicatorEntity(Long indicatorId, AreaEntity area, TendencyEnum tendency) {
+    public AreaIndicatorEntity(String indicatorId, AreaEntity area, TendencyEnum tendency) {
         this.indicatorId = indicatorId;
         this.area = area;
         this.tendency = tendency;
@@ -54,6 +56,11 @@ public class AreaIndicatorEntity {
 
     public AreaIndicatorDTO toDTO() {
         return new AreaIndicatorDTO(id, indicatorId, tendency.toString(), samples.stream().map(SampleEntity::toDTO).collect(Collectors.toList()),
-                goals.stream().map(SampleEntity::toDTO).collect(Collectors.toList()));
+                goals.stream().map(SampleEntity::toDTO).collect(Collectors.toList()), area.toSimplifiedDTO());
+    }
+
+
+    public AreaIndicatorDTO toSimplifiedDTO() {
+        return new AreaIndicatorDTO(id, indicatorId, tendency.toString(), null, null, null);
     }
 }
